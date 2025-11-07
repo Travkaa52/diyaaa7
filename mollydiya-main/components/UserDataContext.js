@@ -1,41 +1,31 @@
-// components/UserDataContext.js
+import React, { createContext, useContext, useState } from 'react';
 
-import React, { createContext, useState, useContext, useEffect } from 'react';
+// 1. Создаем контекст для данных пользователя
+const UserDataContext = createContext(null);
 
-// Данные по умолчанию, которые будут использоваться при первом запуске
-const defaultUserData = {
-  surname: 'КОРИСТУВАЧ',
-  name: 'ГЕНЕРАТИВНИЙ',
-  patronymic: 'АНДРІЙОВИЧ',
-  dob: '01.01.1990',
-  photoUrl: '/user_default_photo.jpg', // Положите заглушку-фото в папку public
+// Моковые данные, имитирующие профиль пользователя Дія
+const MOCK_USER_DATA = {
+  name: "Петро",
+  surname: "Іваненко",
+  patronymic: "Олександрович",
+  phone: "+380 97 123 45 67",
+  email: "petro.ivanenko@diiatest.com",
+  documents: [
+    { type: "ID-картка", number: "123456789", issued: "2020-01-01" },
+    { type: "Водійське посвідчення", number: "ABC987654", issued: "2018-05-15" }
+  ],
 };
 
-const UserDataContext = createContext();
-
-// 💡 Хук для быстрого доступа к данным в любом компоненте
-export const useUserData = () => useContext(UserDataContext);
-
+/**
+ * Провайдер, который оборачивает приложение и предоставляет доступ к данным пользователя.
+ */
 export const UserDataProvider = ({ children }) => {
-  const [userData, setUserData] = useState(defaultUserData);
+  // Используем useState для хранения и обновления данных
+  const [userData, setUserData] = useState(MOCK_USER_DATA);
 
-  // 1. Загрузка данных из Local Storage при первом запуске
-  useEffect(() => {
-    // Проверяем, есть ли сохраненные данные в браузере пользователя
-    const savedData = localStorage.getItem('diiaMockUserData');
-    if (savedData) {
-      setUserData(JSON.parse(savedData));
-    }
-  }, []);
-
-  // 2. Функция для сохранения данных и обновления Local Storage
+  // Функция для обновления данных (если понадобится в будущем)
   const updateUserData = (newData) => {
-    setUserData(prev => {
-      const updated = { ...prev, ...newData };
-      // Сохраняем новые данные в Local Storage
-      localStorage.setItem('diiaMockUserData', JSON.stringify(updated));
-      return updated;
-    });
+    setUserData(prevData => ({ ...prevData, ...newData }));
   };
 
   return (
@@ -43,4 +33,16 @@ export const UserDataProvider = ({ children }) => {
       {children}
     </UserDataContext.Provider>
   );
+};
+
+/**
+ * Хук для удобного доступа к данным пользователя в компонентах.
+ */
+export const useUserData = () => {
+  const context = useContext(UserDataContext);
+  if (context === null) {
+    // Эта ошибка срабатывает, если хук вызван вне провайдера
+    throw new Error('useUserData must be used within a UserDataProvider');
+  }
+  return context;
 };

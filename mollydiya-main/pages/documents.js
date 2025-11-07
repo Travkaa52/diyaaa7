@@ -1,11 +1,67 @@
-// pages/documents.js (Обновленный)
+// pages/documents.js (Обновлено: Все иконки Lucide заменены на инлайн SVG)
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 // 💡 Импортируем хук для получения данных (оставим для функциональности)
 import { useUserData } from '../components/UserDataContext';
 import { useRouter } from 'next/router';
-import { ChevronLeft, MoreHorizontal, Lightning, FileText, User, Smartphone, X } from 'lucide-react';
+
+// --- ИНЛАЙН SVG ИКОНКИ (Замена lucide-react) ---
+
+// Иконка "Назад" (ChevronLeft)
+const ChevronLeftIcon = ({ className = "w-6 h-6 text-gray-800" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="m15 18-6-6 6-6"/>
+    </svg>
+);
+
+// Иконка "Меню/Три точки" (MoreHorizontal)
+const MoreHorizontalIcon = ({ className = "w-6 h-6 text-gray-600" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <circle cx="12" cy="12" r="1"/>
+        <circle cx="19" cy="12" r="1"/>
+        <circle cx="5" cy="12" r="1"/>
+    </svg>
+);
+
+// Иконка "Стрічка" (Smartphone)
+const SmartphoneIcon = ({ className = "w-6 h-6 mb-0.5", isActive }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+);
+
+// Иконка "Документи" (FileText)
+const FileTextIcon = ({ className = "w-6 h-6 mb-0.5", isActive }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+        <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+        <path d="M10 9H8"/>
+        <path d="M16 13H8"/>
+        <path d="M16 17H8"/>
+    </svg>
+);
+
+// Иконка "Сервіси" (Lightning)
+const LightningIcon = ({ className = "w-6 h-6 mb-0.5", isActive }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14H4"/>
+    </svg>
+);
+
+// Иконка "Меню" (User)
+const UserIcon = ({ className = "w-6 h-6 mb-0.5", isActive }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+    </svg>
+);
+
+// Иконка "Крестик" (X) - для имитации значка "Дія" в статусе
+const XIcon = ({ className = "w-3 h-3 text-white" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+    </svg>
+);
+
 
 // Компонент, представляющий нижнюю навигационную панель
 const BottomNavBar = () => {
@@ -15,7 +71,7 @@ const BottomNavBar = () => {
             href={href} 
             className={`flex flex-col items-center justify-center p-2 w-1/4 transition-colors ${isActive ? 'text-[#00C49F]' : 'text-gray-600'}`}
         >
-            <IconComponent className="w-6 h-6 mb-0.5" />
+            <IconComponent isActive={isActive} />
             <span className="text-[10px] font-medium leading-none">{label}</span>
         </Link>
     );
@@ -23,14 +79,11 @@ const BottomNavBar = () => {
     return (
         <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 shadow-xl z-50">
             <div className="flex justify-around items-stretch h-full max-w-xl mx-auto">
-                {/* Стрічка */}
-                <NavItem icon={Smartphone} label="Стрічка" href="/home" isActive={false} />
-                {/* Документи (АКТИВНО) */}
-                <NavItem icon={FileText} label="Документи" href="/documents" isActive={true} />
-                {/* Сервіси */}
-                <NavItem icon={Lightning} label="Сервіси" href="/services" isActive={false} />
-                {/* Меню */}
-                <NavItem icon={User} label="Меню" href="/menu" isActive={false} />
+                <NavItem icon={SmartphoneIcon} label="Стрічка" href="/home" isActive={false} />
+                {/* 'Документи' активен */}
+                <NavItem icon={FileTextIcon} label="Документи" href="/documents" isActive={true} />
+                <NavItem icon={LightningIcon} label="Сервіси" href="/services" isActive={false} />
+                <NavItem icon={UserIcon} label="Меню" href="/menu" isActive={false} />
             </div>
         </nav>
     );
@@ -38,11 +91,10 @@ const BottomNavBar = () => {
 
 
 // Компонент, имитирующий макет ID-карты (Фронт)
-// Мы упростим IDCard, чтобы он соответствовал дизайну паспорта на скриншоте
 const PassportCard = () => {
     // 💡 Получаем актуальные данные из контекста (предполагаем, что они есть)
     // Если контекста нет, используйте заглушку.
-    const hasContext = typeof useUserData !== 'undefined';
+    const hasContext = typeof useUserData !== 'undefined' && typeof useUserData === 'function';
     const mockData = {
         name: "Касьян",
         middleName: "Михайло",
@@ -99,8 +151,7 @@ const PassportCard = () => {
                 {/* Дата обновления */}
                 <p className="text-xs text-[#00C49F] font-medium mb-4 flex items-center">
                     <span className="h-2 w-2 bg-[#00C49F] rounded-full mr-2"></span>
-                    Документ оновлено {mockData.updateDate} • Документ оновлено 
-                    {/* Текст на скриншоте повторяется, имитируем это */}
+                    Документ оновлено {mockData.updateDate} • Документ оновлено
                 </p>
 
                 {/* ФИО */}
@@ -113,11 +164,10 @@ const PassportCard = () => {
 
                     {/* Кнопка "три точки" */}
                     <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
-                        <MoreHorizontal className="w-6 h-6 text-gray-600" />
+                        <MoreHorizontalIcon />
                     </button>
                 </div>
             </div>
-
         </div>
     );
 };
@@ -125,19 +175,22 @@ const PassportCard = () => {
 
 // Основной компонент страницы
 export default function DocumentsPage() {
-    const router = useRouter(); // Оставляем router для потенциальной навигации
+    // 💡 Используем заглушку для router, если Next.js не доступен в песочнице
+    const router = typeof useRouter === 'function' ? useRouter() : { back: () => console.log('Simulating router.back()') };
     const [isFlipped, setIsFlipped] = useState(false); // Оставляем состояние перелистывания
 
-    // Имитация иконки состояния (Wi-Fi/Сигнал)
+    // Имитация иконки состояния Wi-Fi/Сигнал
     const SignalIcon = () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-800"><path d="M16 8V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7l-3 4-2 3h12l-2-3-3-4h7a2 2 0 0 0 2-2V8h-6zM18 10h4M18 14h4"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-800">
+            <path d="M16 8V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7l-3 4-2 3h12l-2-3-3-4h7a2 2 0 0 0 2-2V8h-6zM18 10h4M18 14h4"/>
+        </svg>
     );
     
     // Имитация иконки 'Дія' с цифрой 8
     const DiiAStatusIcon = () => (
         <div className="flex items-center space-x-1">
             <div className="w-4 h-4 rounded-full bg-gray-800 flex items-center justify-center">
-                <X className="w-3 h-3 text-white" strokeWidth={3} /> {/* Имитация значка */ }
+                <XIcon className="w-3 h-3 text-white" />
             </div>
             <span className="text-xs font-semibold text-gray-800">8</span>
         </div>
@@ -165,9 +218,9 @@ export default function DocumentsPage() {
                     onClick={() => router.back()} 
                     className="p-1 rounded-full text-gray-800 hover:bg-gray-200 transition-colors"
                 >
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeftIcon />
                 </button>
-                <h1 className="text-xl font-head font-medium text-gray-800">
+                <h1 className="text-xl font-medium text-gray-800">
                     Мої документи
                 </h1>
                 <div className="w-8 h-8"></div> {/* Для центрирования заголовка */}

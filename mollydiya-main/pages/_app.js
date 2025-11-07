@@ -1,25 +1,42 @@
 // pages/_app.js
 
-// 🔴 ИСПРАВЛЕНИЕ: Псевдоним '@/' (alias) не был настроен.
-// Меняем импорт с '@/' на относительный '../' для корректной работы.
 import '../styles/globals.css'; 
-
-import { Inter } from 'next/font/google';
-import { UserDataProvider } from '../components/UserDataContext'; // Импорт нового провайдера
+import localFont from 'next/font/local';
+import { UserDataProvider } from '../components/UserDataContext';
 import React from 'react';
 
-// Конфигурация шрифта Inter
-const inter = Inter({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-inter',
+// 1. КОНФИГУРАЦИЯ ЛОКАЛЬНЫХ ШРИФТОВ e-Ukraine
+
+// a) Основной шрифт (Regular) для body, используется как font-sans
+const bodyFont = localFont({
+  src: [
+    {
+      path: '../public/fonts/e-Ukraine-Regular.woff', 
+      weight: '400',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-body', // CSS-переменная для основного текста
+});
+
+// b) Шрифт для заголовков (Medium/SemiBold), используется как font-head
+const headFont = localFont({
+  src: [
+    {
+      path: '../public/fonts/e-UkraineHead-Medium.woff', 
+      weight: '500', 
+      style: 'normal',
+    },
+  ],
+  variable: '--font-head', // CSS-переменная для заголовков
 });
 
 
 export default function App({ Component, pageProps }) {
+  // 2. ГЛОБАЛЬНОЕ ПРИМЕНЕНИЕ
+  // Применяем обе переменные шрифтов к корневому div, а font-sans будет использовать --font-body.
   return (
-    // Применяем переменные шрифта Tailwind
-    <div className={`${inter.variable} font-sans`}>
-      {/* Оборачиваем все страницы в провайдер данных пользователя */}
+    <div className={`${bodyFont.variable} ${headFont.variable} font-sans`}>
       <UserDataProvider>
         <Component {...pageProps} />
       </UserDataProvider>

@@ -395,8 +395,10 @@ function DocumentSlider() {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-full h-[450px] overflow-hidden" {...handlers}>
+    // !!! ВИПРАВЛЕННЯ: Додаємо відступ зверху та обмежуємо ширину тут
+    <div className="flex flex-col items-center mt-20 w-[90%] max-w-sm mx-auto"> 
+      {/* !!! ВИПРАВЛЕННЯ: Використовуємо висоту 70vh з мінімізованого файлу */}
+      <div className="relative w-full h-[70vh] overflow-hidden" {...handlers}>
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
@@ -439,10 +441,8 @@ export default function DocumentsPage() {
       className="min-h-screen flex flex-col items-center bg-gradient-to-b 
       from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden"
     >
-      <div className="mt-20 w-[90%] max-w-sm">
-        {/* ВБУДОВУЄМО ПРАЦЮЮЧИЙ СЛАЙДЕР */}
-        <DocumentSlider />
-      </div>
+      {/* СЛАЙДЕР ВЖЕ МІСТИТЬ mt-20 ТА max-w-sm */}
+      <DocumentSlider />
 
       {/* Bottom nav (залишається без змін) */}
       <nav className="fixed bottom-0 left-0 right-0 z-10 bg-black text-white h-[80px] pb-4 flex justify-around items-center text-[10px]">

@@ -26,8 +26,9 @@ const ArrowLeft = (props) => (
 
 export default function EditDataPage() {
   const router = useRouter();
+  // Получаем данные и функцию обновления из контекста
   const { userData, updateUserData } = useUserData();
-  // Використовуємо локальний стан для форм
+  // Используем локальный состояние для формы
   const [formData, setFormData] = useState(userData);
 
   const handleChange = (e) => {
@@ -39,9 +40,9 @@ export default function EditDataPage() {
   };
 
   const handleSave = () => {
-    // Оновлюємо глобальний контекст
+    // Обновляем глобальный контекст
     updateUserData(formData);
-    // Імітуємо перехід назад до меню
+    // Имитируем переход назад к меню
     alert('Дані успішно оновлено!');
     router.push('/menu');
   };
@@ -59,7 +60,7 @@ export default function EditDataPage() {
           <button onClick={() => router.push('/menu')} className="text-gray-600 active:text-gray-800 p-2">
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-xl font-semibold">Редагувати дані</h1>
+          <h1 className="text-xl font-head font-semibold">Редагувати дані</h1>
           <div className="w-10"></div> {/* Заглушка для центрування */}
         </div>
 
@@ -117,7 +118,7 @@ export default function EditDataPage() {
           {/* Кнопка Зберегти */}
           <button
             onClick={handleSave}
-            className="w-full bg-blue-600 text-white py-4 rounded-xl text-lg font-semibold shadow-lg active:bg-blue-700 transition duration-150 mt-8"
+            className="w-full bg-blue-600 text-white py-4 rounded-xl text-lg font-head font-semibold shadow-lg active:bg-blue-700 transition duration-150 mt-8"
           >
             Зберегти зміни
           </button>

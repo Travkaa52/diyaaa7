@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
+// Використовуємо dynamic import для QRCode, щоб уникнути SSR проблем
 import dynamic from 'next/dynamic'; 
 const QRCode = dynamic(() => import("react-qr-code"), { ssr: false });
 
@@ -10,7 +11,6 @@ import { useSwipeable } from "react-swipeable";
 // ЗОВНІШНІ ЗАЛЕЖНОСТІ (СИМУЛЯЦІЯ d, x)
 // ----------------------------------------------------------------------
 
-// Симуляція r(6823) -> d.is: Отримує дані користувача
 const getUserDataAsync = async () => {
   return { 
     key: "valid_key", 
@@ -25,23 +25,22 @@ const getUserDataAsync = async () => {
     signature: "M 10 15 C 20 25, 40 5, 40 15 C 60 25, 80 5, 90 15",
   }; 
 }; 
-const d = { is: getUserDataAsync }; // r(6823)
-const x = { q: (key) => key === "valid_key" }; // r(5187) - Валідація ключа
+const d = { is: getUserDataAsync }; 
+const x = { q: (key) => key === "valid_key" }; 
 
 // ----------------------------------------------------------------------
 // 1. КОМПОНЕНТ DocumentCard (o)
 // ----------------------------------------------------------------------
 
 function DocumentCard({ index: s }) {
-  const [isFlipped, setIsFlipped] = useState(false); // l
-  const [isQRVisible, setIsQRVisible] = useState(false); // m
-  const [userData, setUserData] = useState(null); // u
-  const controls = useAnimation(); // p
+  const [isFlipped, setIsFlipped] = useState(false); 
+  const [isQRVisible, setIsQRVisible] = useState(false); 
+  const [userData, setUserData] = useState(null); 
+  const controls = useAnimation(); 
   const [qrRefresh, setQrRefresh] = useState(0); 
   const [updateTime, setUpdateTime] = useState(""); 
   const [refreshCountdown, setRefreshCountdown] = useState(180);
 
-  // j - функція отримання номера документа 
   const documentNumber = (e) => {
     if (!userData) return "";
     switch (e) {
@@ -51,7 +50,7 @@ function DocumentCard({ index: s }) {
       default: return "";
     }
   };
-  const j = documentNumber(s); // Номер документа
+  const j = documentNumber(s); 
 
   // Логіка часу оновлення
   useEffect(() => {
@@ -125,9 +124,9 @@ function DocumentCard({ index: s }) {
   // Спеціальний слайд для Додавання/Зміни (index 3)
   // --------------------------------------------------
   if (s === 3) {
-    // ВАЖЛИВО: w-full h-full забезпечує, що він займає всю доступну область DocumentSlider
+    // ВАЖЛИВО: додано p-4 для відступів, щоб текст не прилипав до країв
     return (
-      <div className="w-full h-full flex flex-col gap-4 justify-around"> 
+      <div className="w-full h-full flex flex-col gap-4 justify-around p-4"> 
         {/* Кнопка Додати документ */}
         <button className="w-full flex-1 rounded-3xl bg-white/10 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 text-black p-4">
           <div className="w-12 h-12 rounded-full border-2 border-black flex items-center justify-center">
@@ -379,9 +378,9 @@ function DocumentCard({ index: s }) {
 // ----------------------------------------------------------------------
 
 function DocumentSlider() {
-  const [currentIndex, setCurrentIndex] = useState(0); // e
-  const [direction, setDirection] = useState(0); // l
-  const documents = [0, 1, 2, 3]; // n
+  const [currentIndex, setCurrentIndex] = useState(0); 
+  const [direction, setDirection] = useState(0); 
+  const documents = [0, 1, 2, 3]; 
   
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -418,9 +417,9 @@ function DocumentSlider() {
   };
 
   return (
-    // ВИПРАВЛЕНО: h-full та flex-grow для використання доступного простору
-    <div className="flex flex-col items-center h-full flex-grow"> 
-      <div className="relative w-full h-full overflow-hidden" {...handlers}>
+    <div className="flex flex-col items-center"> 
+      {/* ВИПРАВЛЕНО: Фіксована висота h-[65vh] для запобігання переповненню та схлопуванню */}
+      <div className="relative w-full h-[65vh] overflow-hidden" {...handlers}>
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
@@ -493,18 +492,16 @@ export default function DocumentsPage() {
 
   return (
     <main
-      // ВИПРАВЛЕНО: Використовуємо flex-col для вертикального розташування
       className="min-h-screen flex flex-col items-center bg-gradient-to-b 
       from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden"
     >
-        {/* Документ. flex-grow для заповнення простору між header та footer */}
-        <div className="mt-16 w-[90%] max-w-sm mx-auto flex-grow flex flex-col justify-center">
+        {/* Документ. Використовуємо mx-auto для центрування */}
+        <div className="mt-16 w-[90%] max-w-sm mx-auto">
              <DocumentSlider />
         </div>
 
       {/* Bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 z-10 bg-black text-white h-[80px] pb-4 flex justify-around items-center text-[10px]">
-        {/* ... Навігаційні посилання ... */}
         <Link href="/home" className="flex flex-col items-center gap-1 opacity-60">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 12H3"/><path d="M17 18H3"/><path d="M21 6H3"/></svg>
           <span>Стрічка</span>

@@ -1,4 +1,4 @@
-// pages/documents.js (Обновленный)
+// pages/documents.js
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ const IDCard = ({ isFlipped }) => {
     // 💡 Получаем актуальные данные из контекста
     const { userData } = useUserData(); 
 
+    // Стили для 3D-переворота
     const transformStyle = {
         // Устанавливаем перспективу для 3D эффекта
         transformStyle: 'preserve-3d', 
@@ -24,7 +25,8 @@ const IDCard = ({ isFlipped }) => {
         issuingAuthority: userData.issuingAuthority || '2310',
         rnokpp: userData.rnokpp || '3500123456',
         birthPlace: userData.birthPlace || 'КИЇВ, УКРАЇНА',
-        mrz: 'IDUKR' + userData.surname.toUpperCase() + '<<' + userData.name.toUpperCase() + '<<<<<<<<<<', // Пример МЗЗ
+        // Пример МЗЗ: заменяем < на &lt; для корректной компиляции JSX
+        mrz: 'IDUKR' + (userData.surname || 'SURNAME').toUpperCase() + '&lt;&lt;' + (userData.name || 'NAME').toUpperCase() + '&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;',
     };
     
     return (
@@ -127,7 +129,6 @@ const IDCard = ({ isFlipped }) => {
           </div>
 
           {/* ЗВОРОТНА СТОРОНА (Back) */}
-          {/* Смещаем на 180 градусов, чтобы она отображалась сзади */}
           <div
             className="absolute w-full h-full backface-hidden"
             style={{ 
@@ -140,7 +141,7 @@ const IDCard = ({ isFlipped }) => {
                 {/* Верхняя часть с градиентом-рамкой */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#1C8A8C]/20 via-transparent to-transparent pointer-events-none opacity-50"></div>
 
-                {/* Основные данные обратной стороны (СЕТКА) */}
+                {/* Основні дані обратної сторони (СЕТКА) */}
                 <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm text-black flex-grow pt-4">
                     
                     {/* 1. Номер запису в реєстрі */}
@@ -183,12 +184,14 @@ const IDCard = ({ isFlipped }) => {
 
                 {/* Машиносчитувана зона (МЗЗ) в самом низу */}
                 <div className="mt-4 bg-gray-900/90 text-white p-2 rounded-lg text-[10px] font-mono overflow-hidden whitespace-nowrap">
-                    {/* Пример стандартной МЗЗ для ID-картки */}
+                    {/* Первый ряд МЗЗ - уже использует &lt; в backData.mrz */}
                     <p className="tracking-widest truncate">{backData.mrz}</p>
-                    <p className="tracking-widest truncate">9901017M2701017UKR<<<<<<<<<<<</p>
+                    {/* Второй ряд МЗЗ - ИСПРАВЛЕНО: использует &lt; вместо < */}
+                    <p className="tracking-widest truncate">9901017M2701017UKR&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p> 
                 </div>
             </div>
           </div>
+          
         </div>
       );
 };
@@ -196,8 +199,7 @@ const IDCard = ({ isFlipped }) => {
 export default function DocumentsPage() {
     const [isFlipped, setIsFlipped] = useState(false);
     
-    // 💡 Примечание: Убедитесь, что `UserDataContext` предоставляет все необходимые поля
-    // (photoUrl, surname, name, patronymic, dob, gender, issueDate, issuingAuthority, rnokpp, birthPlace, documentNumber)
+    // ВАЖНО: Убедитесь, что 'UserDataContext' доступен и правильно настроен.
     
     return (
         <main className="min-h-screen bg-gradient-to-b from-[#7AC7C0] via-[#B8D7EA] to-[#C5B6E0] pb-16">
@@ -206,7 +208,7 @@ export default function DocumentsPage() {
                     {/* Основной контейнер, который реагирует на клик для перелистывания */}
                     <div
                         className="relative w-full h-[70vh] overflow-hidden"
-                        // Добавляем небольшой виброотклик при клике, если это мобильное приложение
+                        // Добавляем небольшой виброотклик при клике
                         onClick={() => {
                             if (window.navigator.vibrate) {
                                 window.navigator.vibrate(50);
@@ -258,4 +260,3 @@ export default function DocumentsPage() {
         </main>
     );
 }
-

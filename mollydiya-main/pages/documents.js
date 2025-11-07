@@ -3,44 +3,55 @@ import Link from "next/link";
 import QRCode from "react-qr-code";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
-import { useUserData } from "../components/UserDataContext";
 
 // ----------------------------------------------------------------------
-// Зверніть увагу: Ці заглушки необхідні для відтворення логіки з мінімізованого файлу.
-// Якщо у вас є файли `../utils/user-data` та `../utils/key-validation`,
-// замініть їх на справжні імпорти.
+// ЗОВНІШНІ ЗАЛЕЖНОСТІ (СИМУЛЯЦІЯ)
 // ----------------------------------------------------------------------
 
-// --- Placeholder for utility functions (based on minified logic) ---
-// Припускаємо, що ця функція отримує дані користувача зі сховища
-const is = async () => { 
-  // Заглушка, повертає тестові дані для відображення документа
+// Симуляція r(6823) -> d.is: Отримує дані користувача
+const getUserDataAsync = async () => {
+  // Тестові дані, як припускається з мінімізованого файлу
   return { 
     key: "valid_key", 
-    deviceNumber: "DEV12345", 
-    taxCardNumber: "TAX67890", 
-    passportNumber: "PAS13579",
+    deviceNumber: "DEV-12345678", 
+    taxCardNumber: "TAX-901234567", 
+    passportNumber: "PAS-78901234",
     name: "Михайло Валерійович Касьян",
-    birthDate: "11.08.2007",
-    // Замініть на свій шлях до фото
-    imageBase64: "/default-avatar.png", 
     surname: "Касьян",
-    patronymic: "Валерійович"
+    patronymic: "Валерійович",
+    birthDate: "11.08.2007",
+    imageBase64: "/default-avatar.png", // Замініть на ваш шлях до фото
+    signature: "M 10 15 C 20 25, 40 5, 40 15 C 60 25, 80 5, 90 15",
   }; 
 }; 
-// Припускаємо, що ця функція валідує ключ
-const q = (key) => key === "valid_key"; 
+const d = { is: getUserDataAsync }; // r(6823)
+const x = { q: (key) => key === "valid_key" }; // r(5187) - Валідація ключа
+// r(8614) -> m: motion, AnimatePresence
+// r(7072) -> h: useSwipeable
+
+// ----------------------------------------------------------------------
+// 1. КОМПОНЕНТ DocumentCard (o)
 // ----------------------------------------------------------------------
 
+function DocumentCard({ index: s }) {
+  const [isFlipped, setIsFlipped] = useState(false); // l
+  const [isQRVisible, setIsQRVisible] = useState(false); // m
+  const [userData, setUserData] = useState(null); // u
+  const controls = useAnimation(); // p (використовуємо useAnimation з framer-motion)
+  const [qrRefresh, setQrRefresh] = useState(0); // r (для оновлення QR)
+  const [updateTime, setUpdateTime] = useState(""); // n (для часу оновлення)
 
-// --- Component DocumentCard (o) - Картка окремого документа ---
-function DocumentCard({ index }) {
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [isQRVisible, setIsQRVisible] = useState(false);
-  const [userData, setUserData] = useState(null); 
-  const controls = useAnimation();
-  const [qrRefresh, setQrRefresh] = useState(0); // Оновлення QR
-  const [updateTime, setUpdateTime] = useState(""); // Час оновлення
+  // j - функція отримання номера документа залежно від індексу (з мінімізованого файлу)
+  const documentNumber = (e) => {
+    if (!userData) return "";
+    switch (e) {
+      case 0: return userData.deviceNumber; // єДокумент
+      case 1: return userData.taxCardNumber; // Карта платника податків
+      case 2: return userData.passportNumber; // Паспорт
+      default: return "";
+    }
+  };
+  const j = documentNumber(s); // Номер документа
 
   // Логіка оновлення часу та QR коду
   useEffect(() => {
@@ -54,26 +65,13 @@ function DocumentCard({ index }) {
     return () => clearInterval(interval);
   }, [qrRefresh]);
 
-
-  // Логіка отримання номера документа залежно від індексу
-  const getDocumentNumber = (s) => {
-    if (!userData) return "";
-    switch (s) {
-      case 0: return userData.deviceNumber; // єДокумент
-      case 1: return userData.taxCardNumber; // Карта платника податків
-      case 2: return userData.passportNumber; // Паспорт
-      default: return "";
-    }
-  };
-  const documentNumber = getDocumentNumber(index);
-
-  // 1. Отримання даних користувача (з мінімізованого файлу)
+  // Отримання даних користувача (з r(6823) та r(5187))
   useEffect(() => {
     (async () => {
-      let key = await is();
-      if (key) {
-        if (q(key.key)) {
-          setUserData(key);
+      let e = await d.is(); // d.is
+      if (e) {
+        if (x.q(e.key)) { // x.q
+          setUserData(e);
         } else {
           console.error("Invalid key stored in user data");
         }
@@ -81,14 +79,14 @@ function DocumentCard({ index }) {
     })();
   }, []);
 
-  // 2. Анімація перевороту (з мінімізованого файлу)
+  // Анімація перевороту
   useEffect(() => {
-    if (isFlipped) {
-      controls.start({ rotateY: 180 });
-      setTimeout(() => setIsQRVisible(true), 300);
+    if (isFlipped) { // l
+      controls.start({ rotateY: 180 }); // p
+      setTimeout(() => setIsQRVisible(true), 300); // m
     } else {
-      setIsQRVisible(false);
-      controls.start({ rotateY: 0 });
+      setIsQRVisible(false); // m
+      controls.start({ rotateY: 0 }); // p
     }
   }, [isFlipped, controls]);
 
@@ -96,15 +94,15 @@ function DocumentCard({ index }) {
     surname: userData?.surname,
     name: userData?.name,
     patronymic: userData?.patronymic,
-    docType: index === 0 ? "edoc" : index === 1 ? "tax" : "passport",
-    id: documentNumber,
+    docType: s === 0 ? "edoc" : s === 1 ? "tax" : "passport",
+    id: j,
     refresh: qrRefresh,
   });
 
   // --------------------------------------------------
   // Спеціальний слайд для Додавання/Зміни (index 3)
   // --------------------------------------------------
-  if (index === 3) {
+  if (s === 3) {
     return (
       <div className="w-full h-full flex flex-col gap-4">
         <button className="w-full flex-1 rounded-3xl bg-white/10 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 text-black">
@@ -129,7 +127,6 @@ function DocumentCard({ index }) {
     );
   }
   // --------------------------------------------------
-
 
   // --------------------------------------------------
   // Рендеринг основного документа (0, 1, 2)
@@ -156,22 +153,22 @@ function DocumentCard({ index }) {
           <div className="w-full h-full rounded-3xl bg-white/10 backdrop-blur-[2px] p-6 flex flex-col relative overflow-hidden text-black">
             
             {/* Градієнт для єДокумента */}
-            {index !== 1 && ( 
+            {s !== 1 && ( 
               <div className="absolute inset-0 bg-gradient-to-br from-[#43A047]/10 via-transparent to-transparent pointer-events-none" />
             )}
             
             {/* Заголовок */}
             <div className="flex flex-col mb-6">
-              {index === 0 && (
+              {s === 0 && (
                 <h2 className="text-[22px] font-medium">єДокумент</h2>
               )}
-              {index === 1 && (
+              {s === 1 && (
                 <Fragment>
                   <h2 className="text-[22px] font-medium">Карта платника</h2>
                   <h2 className="text-[22px] font-medium">податків</h2>
                 </Fragment>
               )}
-              {index === 2 && (
+              {s === 2 && (
                 <Fragment>
                   <h2 className="text-[22px] font-medium">Паспорт громадянина</h2>
                   <h2 className="text-[22px] font-medium">України</h2>
@@ -183,15 +180,16 @@ function DocumentCard({ index }) {
             {userData ? (
               <Fragment>
                 {/* Карта платника податків (index 1) - відрізняється розміткою */}
-                {index === 1 ? (
+                {s === 1 ? (
                   <div className="flex flex-col h-full">
                     <div className="mb-6">
                       <p className="text-[15px] uppercase">РНОКПП</p>
                     </div>
                     <div className="space-y-3 mb-auto">
                       <div className="space-y-0.5">
-                        {userData.name.split(" ").map((namePart, s) => (
-                          <p key={s} className="text-[17px] font-medium leading-tight">
+                        {/* Розбиття ПІБ на окремі рядки */}
+                        {[userData.surname, userData.name, userData.patronymic].filter(Boolean).map((namePart, index) => (
+                          <p key={index} className="text-[17px] font-medium leading-tight">
                             {namePart}
                           </p>
                         ))}
@@ -202,7 +200,7 @@ function DocumentCard({ index }) {
                       </div>
                     </div>
                     
-                    {/* Рухомий рядок оновлення */}
+                    {/* Рухомий рядок оновлення (заглушка анімації) */}
                     <div className="relative w-[calc(100%+3rem)] -mx-6 overflow-hidden mt-auto mb-4 h-7">
                         <div className="absolute inset-0 bg-gradient-to-r from-[#90EE90] to-[#87CEEB]">
                             <div className="absolute inset-0 bg-gradient-to-r from-[#ffffff10] to-transparent" />
@@ -215,10 +213,10 @@ function DocumentCard({ index }) {
                     </div>
                     
                     <div className="flex items-end justify-between mt-4">
-                      <p className="text-[26px] font-medium">{documentNumber}</p>
+                      <p className="text-[26px] font-medium">{j}</p>
                       <button className="w-8 h-8 rounded-full bg-black flex items-center justify-center">
                         <div className="flex gap-1">
-                          {[...Array(3)].map((_, s) => (<div key={s} className="w-1 h-1 rounded-full bg-white" />))}
+                          {[...Array(3)].map((_, index) => (<div key={index} className="w-1 h-1 rounded-full bg-white" />))}
                         </div>
                       </button>
                     </div>
@@ -240,11 +238,11 @@ function DocumentCard({ index }) {
                         </div>
                         <div>
                           <p className="text-[15px] font-semibold mb-1">
-                            {index === 0 ? "РНОКПП:" : "Номер:"}
+                            {s === 0 ? "РНОКПП:" : "Номер:"}
                           </p>
-                          <p className="text-[15px] font-semibold">{documentNumber}</p>
+                          <p className="text-[15px] font-semibold">{j}</p>
                         </div>
-                        {index === 2 && userData?.signature && (
+                        {s === 2 && userData?.signature && (
                           <svg width="100" height="30" className="mt-2">
                             <path d={userData.signature} stroke="black" strokeWidth="1.5" fill="none" />
                           </svg>
@@ -252,7 +250,7 @@ function DocumentCard({ index }) {
                       </div>
                     </div>
                     
-                    {/* Рухомий рядок оновлення */}
+                    {/* Рухомий рядок оновлення (заглушка анімації) */}
                     <div className="relative w-[calc(100%+3rem)] -mx-6 overflow-hidden h-7 mt-auto">
                         <div className="absolute inset-0 bg-gradient-to-r from-[#90EE90] to-[#87CEEB]">
                             <div className="absolute inset-0 bg-gradient-to-r from-[#ffffff10] to-transparent" />
@@ -266,15 +264,16 @@ function DocumentCard({ index }) {
 
                     <div className="mt-4 flex items-center justify-between">
                       <div className="space-y-0.5">
-                        {userData.name.split(" ").map((namePart, s) => (
-                          <p key={s} className="text-[26px] font-medium leading-tight">
+                        {/* Розбиття ПІБ на окремі рядки */}
+                        {[userData.surname, userData.name, userData.patronymic].filter(Boolean).map((namePart, index) => (
+                          <p key={index} className="text-[26px] font-medium leading-tight">
                             {namePart}
                           </p>
                         ))}
                       </div>
                       <button className="w-8 h-8 rounded-full bg-black flex items-center justify-center self-end mb-1">
                         <div className="flex gap-1">
-                          {[...Array(3)].map((_, s) => (<div key={s} className="w-1 h-1 rounded-full bg-white" />))}
+                          {[...Array(3)].map((_, index) => (<div key={index} className="w-1 h-1 rounded-full bg-white" />))}
                         </div>
                       </button>
                     </div>
@@ -311,36 +310,34 @@ function DocumentCard({ index }) {
                 </p>
                 
                 {/* Control buttons from minified file */}
-                {0 !== index && (
-                  <div className="flex gap-4">
-                    <div className="flex flex-col items-center">
-                      <button className="p-3 bg-black rounded-xl text-white">
-                        <div className="w-6 h-6 flex items-center justify-center">
-                          <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-                            <path
-                              d="M3 9h6m-6 6h6m6-6h6m-6 6h6M3 3h6v6H3V3zm12 0h6v6h-6V3zM3 15h6v6H3v-6zm12 0h6v6h-6v-6z"
-                              stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-                            />
-                          </svg>
-                        </div>
-                      </button>
-                      <span className="text-xs mt-2 text-black">QR-код</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <button className="p-3 bg-black rounded-xl text-white">
-                        <div className="w-6 h-6 flex items-center justify-center">
-                          <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-                            <path
-                              d="M4 5h16M4 9h16M4 13h16M4 19h16"
-                              stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-                            />
-                          </svg>
-                        </div>
-                      </button>
-                      <span className="text-xs mt-2 text-black">Штрих-код</span>
-                    </div>
+                <div className="flex gap-4">
+                  <div className="flex flex-col items-center">
+                    <button className="p-3 bg-black rounded-xl text-white">
+                      <div className="w-6 h-6 flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                          <path
+                            d="M3 9h6m-6 6h6m6-6h6m-6 6h6M3 3h6v6H3V3zm12 0h6v6h-6V3zM3 15h6v6H3v-6zm12 0h6v6h-6v-6z"
+                            stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                    <span className="text-xs mt-2 text-black">QR-код</span>
                   </div>
-                )}
+                  <div className="flex flex-col items-center">
+                    <button className="p-3 bg-black rounded-xl text-white">
+                      <div className="w-6 h-6 flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                          <path
+                            d="M4 5h16M4 9h16M4 13h16M4 19h16"
+                            stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                    <span className="text-xs mt-2 text-black">Штрих-код</span>
+                  </div>
+                </div>
                 <div className="bg-green-200 text-green-900 text-xs px-4 py-2 font-medium w-full text-center mt-4">
                     Документ оновлено {updateTime}
                 </div>
@@ -353,24 +350,27 @@ function DocumentCard({ index }) {
   );
 }
 
+// ----------------------------------------------------------------------
+// 2. КОМПОНЕНТ DocumentSlider (u)
+// ----------------------------------------------------------------------
 
-// --- Component DocumentSlider (u) - Слайдер документів ---
 function DocumentSlider() {
-  const [currentIndex, setCurrentIndex] = useState(0); 
-  const [direction, setDirection] = useState(0); 
-  const documents = [0, 1, 2, 3]; // Індекси: 0, 1, 2, 3 (Додати/Змінити)
-
+  const [currentIndex, setCurrentIndex] = useState(0); // e
+  const [direction, setDirection] = useState(0); // l
+  const documents = [0, 1, 2, 3]; // n
+  
+  // h.QS - використання useSwipeable з react-swipeable
   const handlers = useSwipeable({
     onSwipedLeft: () => {
       if (currentIndex < documents.length - 1) {
-        setDirection(1);
-        setCurrentIndex(prev => prev + 1);
+        setDirection(1); // i(1)
+        setCurrentIndex(prev => prev + 1); // s(e=>e+1)
       }
     },
     onSwipedRight: () => {
       if (currentIndex > 0) {
-        setDirection(-1);
-        setCurrentIndex(prev => prev - 1);
+        setDirection(-1); // i(-1)
+        setCurrentIndex(prev => prev - 1); // s(e=>e-1)
       }
     },
     preventDefaultTouchmoveEvent: true,
@@ -395,10 +395,10 @@ function DocumentSlider() {
   };
 
   return (
-    // !!! ВИПРАВЛЕННЯ: Додаємо відступ зверху та обмежуємо ширину тут
-    <div className="flex flex-col items-center mt-20 w-[90%] max-w-sm mx-auto"> 
-      {/* !!! ВИПРАВЛЕННЯ: Використовуємо висоту 70vh з мінімізованого файлу */}
+    // !!! КЛАСИ З МІНІМІЗОВАНОГО ФАЙЛУ ДЛЯ u
+    <div className="flex flex-col items-center"> 
       <div className="relative w-full h-[70vh] overflow-hidden" {...handlers}>
+        {/* m.M - AnimatePresence з framer-motion */}
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
@@ -432,19 +432,25 @@ function DocumentSlider() {
 }
 
 
-// --- Main component DocumentsPage (обгортка) ---
-export default function DocumentsPage() {
-    // Тут залишаємо тільки загальну обгортку та навігацію
+// ----------------------------------------------------------------------
+// 3. ГОЛОВНА СТОРІНКА (DocumentsPage)
+// ----------------------------------------------------------------------
 
+export default function DocumentsPage() {
+    // Вхідна точка, яка має містити DocumentSlider
+    // Додаємо стилі для фону та відступи, як у попередніх версіях сторінки документів.
   return (
     <main
       className="min-h-screen flex flex-col items-center bg-gradient-to-b 
       from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden"
     >
-      {/* СЛАЙДЕР ВЖЕ МІСТИТЬ mt-20 ТА max-w-sm */}
-      <DocumentSlider />
+        {/* Додаємо відступ зверху для позиціонування картки */}
+        <div className="mt-20 w-[90%] max-w-sm mx-auto">
+             <DocumentSlider />
+        </div>
 
-      {/* Bottom nav (залишається без змін) */}
+
+      {/* Bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 z-10 bg-black text-white h-[80px] pb-4 flex justify-around items-center text-[10px]">
         <Link
           href="/home"

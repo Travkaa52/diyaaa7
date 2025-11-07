@@ -417,8 +417,8 @@ function DocumentSlider() {
 
   return (
     <div className="flex flex-col items-center"> 
-      {/* Зберігаємо фіксовану висоту h-[65vh] для коректної роботи свайпу */}
-      <div className="relative w-full h-[65vh] overflow-hidden" {...handlers}>
+      {/* ВИПРАВЛЕНО: Зменшено висоту з h-[65vh] на h-[60vh] для кращого запасу */}
+      <div className="relative w-full h-[60vh] overflow-hidden" {...handlers}>
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
@@ -491,10 +491,9 @@ export default function DocumentsPage() {
 
   return (
     <main
-      // ВИПРАВЛЕНО: Додано pt-16 (padding-top) для відступу від верху 
-      // та pb-24 (padding-bottom) для відступу над фіксованою навігацією знизу
-      className="min-h-screen flex flex-col items-center bg-gradient-to-b 
-      from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden pt-16 pb-24"
+      // ВИПРАВЛЕНО: Додано justify-center для вертикального центрування контенту
+      className="min-h-screen flex flex-col items-center justify-center 
+      bg-gradient-to-b from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden pt-16 pb-24"
     >
         {/* Документ. Використовуємо автоматичний mx-auto для центрування */}
         <div className="w-[90%] max-w-sm mx-auto"> 
@@ -503,8 +502,6 @@ export default function DocumentsPage() {
 
       {/* Bottom nav (фіксована) */}
       <nav className="fixed bottom-0 left-0 right-0 z-10 bg-black text-white h-[80px] pb-4 flex justify-around items-center text-[10px]">
-      {/* Bottom nav (фіксована) */}
-        {/* ... ваша навігація ... */}
         <Link href="/home" className="flex flex-col items-center gap-1 opacity-60">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 12H3"/><path d="M17 18H3"/><path d="M21 6H3"/></svg>
           <span>Стрічка</span>

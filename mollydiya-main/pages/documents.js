@@ -495,7 +495,7 @@ export default function DocumentsPage() {
       className="min-h-screen flex flex-col items-center bg-gradient-to-b 
       from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden pt-16 pb-24"
     >
-        {/* Документ. Видаляємо mt-16, оскільки простір задано через padding-top main */}
+        {/* Документ. Прибираємо mt-16, оскільки простір задано через padding-top main */}
         <div className="w-[90%] max-w-sm mx-auto">
              <DocumentSlider />
         </div>

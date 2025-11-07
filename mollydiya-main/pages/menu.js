@@ -194,8 +194,11 @@ export default function MenuPage() {
               <span className="text-[15px]">Питання та відповіді</span>
             </button>
             
-            {/* НОВА КНОПКА: Редагувати дані */}
-            <button className="flex items-center gap-3 bg-white rounded-2xl p-4 active:bg-gray-50">
+            {/* ОНОВЛЕНО: Перетворюємо кнопку на Link для навігації до /edit-data */}
+            <Link 
+              href="/edit-data" 
+              className="flex items-center gap-3 bg-white rounded-2xl p-4 active:bg-gray-50"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -211,8 +214,8 @@ export default function MenuPage() {
                 <path d="M17 3a2.85 2.85 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
                 <path d="m15 5 4 4"></path>
               </svg>
-              <span className="text-[15px]">Редагувати дані</span>
-            </button>
+              <span className="text-[15px]">**Редагувати дані**</span>
+            </Link>
           </div>
         </div>
 
@@ -307,4 +310,3 @@ export default function MenuPage() {
     </>
   );
 }
-

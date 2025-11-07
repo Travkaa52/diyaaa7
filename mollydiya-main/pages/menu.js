@@ -20,11 +20,11 @@ export default function MenuPage() {
         <div className="px-5 flex flex-col gap-3">
           {/* Заголовок і версія */}
           <div className="mb-2">
-            <h1 className="text-[28px] font-semibold mb-0.5">Меню</h1>
+            <h1 className="text-[28px] font-head font-semibold mb-0.5">Меню</h1>
             <p className="text-[13px] text-gray-600">
               Версія Дії: 4.16.4.1488
             </p>
-          </div>
+            </div>
 
           {/* Список кнопок меню */}
           <div className="flex flex-col gap-2">
@@ -194,7 +194,7 @@ export default function MenuPage() {
               <span className="text-[15px]">Питання та відповіді</span>
             </button>
             
-            {/* ОНОВЛЕНО: Перетворюємо кнопку на Link для навігації до /edit-data */}
+            {/* ОНОВЛЕНО: Link для навігації до /edit-data */}
             <Link 
               href="/edit-data" 
               className="flex items-center gap-3 bg-white rounded-2xl p-4 active:bg-gray-50"

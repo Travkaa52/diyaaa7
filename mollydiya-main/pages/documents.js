@@ -124,7 +124,6 @@ function DocumentCard({ index: s }) {
   // Спеціальний слайд для Додавання/Зміни (index 3)
   // --------------------------------------------------
   if (s === 3) {
-    // ВАЖЛИВО: додано p-4 для відступів, щоб текст не прилипав до країв
     return (
       <div className="w-full h-full flex flex-col gap-4 justify-around p-4"> 
         {/* Кнопка Додати документ */}
@@ -418,7 +417,7 @@ function DocumentSlider() {
 
   return (
     <div className="flex flex-col items-center"> 
-      {/* ВИПРАВЛЕНО: Фіксована висота h-[65vh] для запобігання переповненню та схлопуванню */}
+      {/* Зберігаємо фіксовану висоту h-[65vh] для коректної роботи свайпу */}
       <div className="relative w-full h-[65vh] overflow-hidden" {...handlers}>
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
@@ -492,15 +491,16 @@ export default function DocumentsPage() {
 
   return (
     <main
+      // ВИПРАВЛЕНО: Додаємо pt-16 (padding-top) для відступу від верху та pb-24 для відступу над фіксованою навігацією
       className="min-h-screen flex flex-col items-center bg-gradient-to-b 
-      from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden"
+      from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden pt-16 pb-24"
     >
-        {/* Документ. Використовуємо mx-auto для центрування */}
-        <div className="mt-16 w-[90%] max-w-sm mx-auto">
+        {/* Документ. Видаляємо mt-16, оскільки простір задано через padding-top main */}
+        <div className="w-[90%] max-w-sm mx-auto">
              <DocumentSlider />
         </div>
 
-      {/* Bottom nav */}
+      {/* Bottom nav (фіксована) */}
       <nav className="fixed bottom-0 left-0 right-0 z-10 bg-black text-white h-[80px] pb-4 flex justify-around items-center text-[10px]">
         <Link href="/home" className="flex flex-col items-center gap-1 opacity-60">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 12H3"/><path d="M17 18H3"/><path d="M21 6H3"/></svg>

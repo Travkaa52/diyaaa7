@@ -8,7 +8,7 @@ import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { useSwipeable } from "react-swipeable"; 
 
 // ----------------------------------------------------------------------
-// ВНЕШНИЕ ЗАВИСИМОСТИ (СИМУЛЯЦИЯ d, x)
+// 1. ВНЕШНИЕ ЗАВИСИМОСТИ (СИМУЛЯЦИЯ d, x)
 // ----------------------------------------------------------------------
 
 const getUserDataAsync = async () => {
@@ -30,7 +30,7 @@ const d = { is: getUserDataAsync };
 const x = { q: (key) => key === "valid_key" }; 
 
 // ----------------------------------------------------------------------
-// 1. КОМПОНЕНТ DocumentCard (o)
+// 2. КОМПОНЕНТ DocumentCard
 // ----------------------------------------------------------------------
 
 function DocumentCard({ index: s }) {
@@ -202,7 +202,7 @@ function DocumentCard({ index: s }) {
             {/* Отображение данных */}
             {userData ? (
               <Fragment>
-                {/* Карта плательщика налогов (index 1) */}
+                {/* Карта плательщика налогов (index 1) - ДИЗАЙН ПО СКРИНШОТУ */}
                 {s === 1 ? (
                   <div className="flex flex-col h-full">
                     {/* Ключевая информация */}
@@ -221,7 +221,7 @@ function DocumentCard({ index: s }) {
                       </div>
                     </div>
                     
-                    {/* НОВЫЙ ВЕЛИКИЙ РНОКПП (Как на скриншоте) */}
+                    {/* НОВЫЙ ВЕЛИКИЙ РНОКПП */}
                     <div className="mb-auto mt-auto">
                         <p className="text-4xl font-extrabold tracking-tight text-left">
                            {j}
@@ -321,7 +321,7 @@ function DocumentCard({ index: s }) {
           style={{ transform: "rotateY(180deg)" }}
           initial={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
           animate={{ backgroundColor: isFlipped ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.1)" }}
-          // ИСПРАВЛЕНИЕ АНИМАЦИИ: Убираем задержку, чтобы карточка переворачивалась обратно корректно
+          // ИСПРАВЛЕНИЕ АНИМАЦИИ: Убираем задержку
           transition={{ duration: 0.3 }} 
         >
           <div className="w-full h-full rounded-3xl p-6 flex flex-col items-center justify-center gap-6">
@@ -342,9 +342,9 @@ function DocumentCard({ index: s }) {
                   Скануйте для перевірки дійсності
                 </p>
                 
-                {/* Control buttons from minified file */}
+                {/* Control buttons */}
                 <div className="flex gap-4">
-                    {/* Кнопка QR-код (єДокумент не має) */}
+                    {/* Кнопка QR-код */}
                   {s !== 0 && (
                       <div className="flex flex-col items-center">
                          <button className="p-3 bg-black rounded-xl text-white">
@@ -383,7 +383,7 @@ function DocumentCard({ index: s }) {
 }
 
 // ----------------------------------------------------------------------
-// 2. КОМПОНЕНТ DocumentSlider (u)
+// 3. КОМПОНЕНТ DocumentSlider
 // ----------------------------------------------------------------------
 
 function DocumentSlider() {
@@ -426,9 +426,9 @@ function DocumentSlider() {
   };
 
   return (
-    <div className="flex flex-col items-center"> 
-      {/* ИСПРАВЛЕНО: h-[60vh] заменено на h-full для корректного центрирования родительским flex-контейнером */}
-      <div className="relative w-full h-full overflow-hidden" {...handlers}>
+    <div className="flex flex-col items-center w-full"> 
+      {/* ИСПРАВЛЕНИЕ: Задаем явную высоту (520px), чтобы абсолютно позиционированные карточки не накладывались. */}
+      <div className="relative w-full h-[520px] overflow-hidden" {...handlers}>
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
@@ -463,7 +463,7 @@ function DocumentSlider() {
 
 
 // ----------------------------------------------------------------------
-// 3. ГЛАВНАЯ СТРАНИЦА (DocumentsPage)
+// 4. ГЛАВНАЯ СТРАНИЦА (DocumentsPage)
 // ----------------------------------------------------------------------
 
 export default function DocumentsPage() {
@@ -501,12 +501,14 @@ export default function DocumentsPage() {
 
   return (
     <main
-      // ГЛАВНОЕ ИСПРАВЛЕНИЕ: justify-center для идеального вертикального центрирования
-      className="min-h-screen flex flex-col items-center justify-center 
-      bg-gradient-to-b from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden pt-16 pb-24"
+      // УДАЛЕНО: pb-24. min-h-screen и flex-col остаются.
+      className="min-h-screen flex flex-col items-center bg-gradient-to-b 
+      from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden pt-16"
     >
-        {/* Документ. Используем автоматический mx-auto для центрирования */}
-        <div className="w-[90%] max-w-sm mx-auto"> 
+        {/* ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ ЦЕНТРИРОВАНИЯ: flex-grow заставляет этот блок 
+            занять всю высоту между pt-16 и нижней фиксированной навигацией. 
+            items-center и justify-center центрируют DocumentSlider внутри него. */}
+        <div className="flex-grow flex items-center justify-center w-[90%] max-w-sm mx-auto">
              <DocumentSlider />
         </div>
 

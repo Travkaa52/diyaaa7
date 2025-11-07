@@ -53,7 +53,7 @@ function DocumentCard({ index: s }) {
   };
   const j = documentNumber(s); 
 
-  // Логика времени обновления
+  // Логика времени обновления и QR-кода
   useEffect(() => {
     const now = new Date();
     setUpdateTime(
@@ -202,7 +202,7 @@ function DocumentCard({ index: s }) {
             {/* Отображение данных */}
             {userData ? (
               <Fragment>
-                {/* Карта плательщика налогов (index 1) - ДИЗАЙН ПО СКРИНШОТУ */}
+                {/* Карта плательщика налогов (index 1) - ФИНАЛЬНЫЙ ДИЗАЙН */}
                 {s === 1 ? (
                   <div className="flex flex-col h-full">
                     {/* Ключевая информация */}
@@ -427,7 +427,7 @@ function DocumentSlider() {
 
   return (
     <div className="flex flex-col items-center w-full"> 
-      {/* ИСПРАВЛЕНИЕ: Задаем явную высоту (520px), чтобы абсолютно позиционированные карточки не накладывались. */}
+      {/* ИСПРАВЛЕНО: Задаем явную высоту (520px), чтобы абсолютно позиционированные карточки не накладывались. */}
       <div className="relative w-full h-[520px] overflow-hidden" {...handlers}>
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
@@ -501,13 +501,12 @@ export default function DocumentsPage() {
 
   return (
     <main
-      // УДАЛЕНО: pb-24. min-h-screen и flex-col остаются.
+      // ИСПРАВЛЕНО: Удален pb-24 для точного центрирования.
       className="min-h-screen flex flex-col items-center bg-gradient-to-b 
       from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden pt-16"
     >
-        {/* ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ ЦЕНТРИРОВАНИЯ: flex-grow заставляет этот блок 
-            занять всю высоту между pt-16 и нижней фиксированной навигацией. 
-            items-center и justify-center центрируют DocumentSlider внутри него. */}
+        {/* ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ ЦЕНТРИРОВАНИЯ: flex-grow занимает все свободное 
+            пространство и центрирует слайдер (DocumentSlider) по вертикали. */}
         <div className="flex-grow flex items-center justify-center w-[90%] max-w-sm mx-auto">
              <DocumentSlider />
         </div>

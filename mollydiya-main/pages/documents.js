@@ -189,7 +189,6 @@ const IDCard = ({ isFlipped }) => {
                 </div>
             </div>
           </div>
-          
         </div>
       );
 };
@@ -259,3 +258,4 @@ export default function DocumentsPage() {
         </main>
     );
 }
+

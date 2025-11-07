@@ -1,22 +1,22 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
 import QRCode from "react-qr-code";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { useSwipeable } from "react-swipeable";
+// Імпортуємо фреймворк та залежності для анімації/свайпу, як у мінімізованому файлі:
+import { motion, AnimatePresence, useAnimation } from "framer-motion"; // r(8614) -> m
+import { useSwipeable } from "react-swipeable"; // r(7072) -> h
 
 // ----------------------------------------------------------------------
-// ЗОВНІШНІ ЗАЛЕЖНОСТІ (СИМУЛЯЦІЯ)
+// ЗОВНІШНІ ЗАЛЕЖНОСТІ (СИМУЛЯЦІЯ d, x)
 // ----------------------------------------------------------------------
 
 // Симуляція r(6823) -> d.is: Отримує дані користувача
 const getUserDataAsync = async () => {
-  // Тестові дані, як припускається з мінімізованого файлу
   return { 
     key: "valid_key", 
     deviceNumber: "DEV-12345678", 
     taxCardNumber: "TAX-901234567", 
     passportNumber: "PAS-78901234",
-    name: "Михайло Валерійович Касьян",
+    name: "Михайло",
     surname: "Касьян",
     patronymic: "Валерійович",
     birthDate: "11.08.2007",
@@ -26,8 +26,6 @@ const getUserDataAsync = async () => {
 }; 
 const d = { is: getUserDataAsync }; // r(6823)
 const x = { q: (key) => key === "valid_key" }; // r(5187) - Валідація ключа
-// r(8614) -> m: motion, AnimatePresence
-// r(7072) -> h: useSwipeable
 
 // ----------------------------------------------------------------------
 // 1. КОМПОНЕНТ DocumentCard (o)
@@ -37,11 +35,11 @@ function DocumentCard({ index: s }) {
   const [isFlipped, setIsFlipped] = useState(false); // l
   const [isQRVisible, setIsQRVisible] = useState(false); // m
   const [userData, setUserData] = useState(null); // u
-  const controls = useAnimation(); // p (використовуємо useAnimation з framer-motion)
-  const [qrRefresh, setQrRefresh] = useState(0); // r (для оновлення QR)
-  const [updateTime, setUpdateTime] = useState(""); // n (для часу оновлення)
+  const controls = useAnimation(); // p
+  const [qrRefresh, setQrRefresh] = useState(0); // r
+  const [updateTime, setUpdateTime] = useState(""); // n
 
-  // j - функція отримання номера документа залежно від індексу (з мінімізованого файлу)
+  // j - функція отримання номера документа (відновлена з мінімізованого файлу)
   const documentNumber = (e) => {
     if (!userData) return "";
     switch (e) {
@@ -61,16 +59,17 @@ function DocumentCard({ index: s }) {
         day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
       })
     );
-    const interval = setInterval(() => setQrRefresh((r) => r + 1), 180000); // Оновлення QR кожні 3 хв
+    // Оновлення QR кожні 3 хв (180000 мс)
+    const interval = setInterval(() => setQrRefresh((r) => r + 1), 180000); 
     return () => clearInterval(interval);
   }, [qrRefresh]);
 
   // Отримання даних користувача (з r(6823) та r(5187))
   useEffect(() => {
     (async () => {
-      let e = await d.is(); // d.is
+      let e = await d.is(); 
       if (e) {
-        if (x.q(e.key)) { // x.q
+        if (x.q(e.key)) { 
           setUserData(e);
         } else {
           console.error("Invalid key stored in user data");
@@ -81,12 +80,12 @@ function DocumentCard({ index: s }) {
 
   // Анімація перевороту
   useEffect(() => {
-    if (isFlipped) { // l
-      controls.start({ rotateY: 180 }); // p
-      setTimeout(() => setIsQRVisible(true), 300); // m
+    if (isFlipped) { 
+      controls.start({ rotateY: 180 }); 
+      setTimeout(() => setIsQRVisible(true), 300); 
     } else {
-      setIsQRVisible(false); // m
-      controls.start({ rotateY: 0 }); // p
+      setIsQRVisible(false); 
+      controls.start({ rotateY: 0 }); 
     }
   }, [isFlipped, controls]);
 
@@ -105,16 +104,19 @@ function DocumentCard({ index: s }) {
   if (s === 3) {
     return (
       <div className="w-full h-full flex flex-col gap-4">
+        {/* Кнопка Додати документ */}
         <button className="w-full flex-1 rounded-3xl bg-white/10 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 text-black">
           <div className="w-12 h-12 rounded-full border-2 border-black flex items-center justify-center">
-            {/* Icon Add */}
+            {/* Іконка Add (+) */}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5v14"/></svg>
           </div>
           <p className="text-xl font-medium">Додати документ</p>
         </button>
+        
+        {/* Кнопка Змінити порядок документів */}
         <button className="w-full flex-1 rounded-3xl bg-white/10 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 text-black">
           <div className="w-12 h-12 rounded-full border-2 border-black flex items-center justify-center">
-            {/* Icon Edit */}
+            {/* Іконка Edit (олівець) */}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5l4 4L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </div>
           <p className="text-xl font-medium">
@@ -152,7 +154,7 @@ function DocumentCard({ index: s }) {
         >
           <div className="w-full h-full rounded-3xl bg-white/10 backdrop-blur-[2px] p-6 flex flex-col relative overflow-hidden text-black">
             
-            {/* Градієнт для єДокумента */}
+            {/* Градієнт для єДокумента (згідно з мінімізованим файлом) */}
             {s !== 1 && ( 
               <div className="absolute inset-0 bg-gradient-to-br from-[#43A047]/10 via-transparent to-transparent pointer-events-none" />
             )}
@@ -188,11 +190,9 @@ function DocumentCard({ index: s }) {
                     <div className="space-y-3 mb-auto">
                       <div className="space-y-0.5">
                         {/* Розбиття ПІБ на окремі рядки */}
-                        {[userData.surname, userData.name, userData.patronymic].filter(Boolean).map((namePart, index) => (
-                          <p key={index} className="text-[17px] font-medium leading-tight">
-                            {namePart}
-                          </p>
-                        ))}
+                        <p className="text-[17px] font-medium leading-tight">{userData.surname}</p>
+                        <p className="text-[17px] font-medium leading-tight">{userData.name}</p>
+                        <p className="text-[17px] font-medium leading-tight">{userData.patronymic}</p>
                       </div>
                       <div>
                         <p className="text-[16px]">Дата народження</p>
@@ -206,7 +206,7 @@ function DocumentCard({ index: s }) {
                             <div className="absolute inset-0 bg-gradient-to-r from-[#ffffff10] to-transparent" />
                         </div>
                         <div className="whitespace-nowrap py-1 text-sm absolute inset-0 flex items-center overflow-hidden">
-                            <div className="animate-scroll">
+                            <div className="animate-scroll" style={{ animation: 'scroll 10s linear infinite' }}>
                                 <span>Документ оновлено о {updateTime} . Перевірено Державною податковою службою &nbsp;&nbsp;&nbsp;&nbsp;</span>
                             </div>
                         </div>
@@ -214,6 +214,7 @@ function DocumentCard({ index: s }) {
                     
                     <div className="flex items-end justify-between mt-4">
                       <p className="text-[26px] font-medium">{j}</p>
+                      {/* Меню/налаштування кнопка (три крапки) */}
                       <button className="w-8 h-8 rounded-full bg-black flex items-center justify-center">
                         <div className="flex gap-1">
                           {[...Array(3)].map((_, index) => (<div key={index} className="w-1 h-1 rounded-full bg-white" />))}
@@ -256,7 +257,7 @@ function DocumentCard({ index: s }) {
                             <div className="absolute inset-0 bg-gradient-to-r from-[#ffffff10] to-transparent" />
                         </div>
                         <div className="whitespace-nowrap py-1 text-sm absolute inset-0 flex items-center overflow-hidden">
-                            <div className="animate-scroll">
+                            <div className="animate-scroll" style={{ animation: 'scroll 10s linear infinite' }}>
                                 <span>Документ діє під час воєнного стану. Ой у лузі червона калина похилилася... Оновлено о {updateTime} &nbsp;&nbsp;&nbsp;&nbsp;</span>
                             </div>
                         </div>
@@ -265,12 +266,11 @@ function DocumentCard({ index: s }) {
                     <div className="mt-4 flex items-center justify-between">
                       <div className="space-y-0.5">
                         {/* Розбиття ПІБ на окремі рядки */}
-                        {[userData.surname, userData.name, userData.patronymic].filter(Boolean).map((namePart, index) => (
-                          <p key={index} className="text-[26px] font-medium leading-tight">
-                            {namePart}
-                          </p>
-                        ))}
+                        <p className="text-[26px] font-medium leading-tight">{userData.surname}</p>
+                        <p className="text-[26px] font-medium leading-tight">{userData.name}</p>
+                        <p className="text-[26px] font-medium leading-tight">{userData.patronymic}</p>
                       </div>
+                      {/* Меню/налаштування кнопка (три крапки) */}
                       <button className="w-8 h-8 rounded-full bg-black flex items-center justify-center self-end mb-1">
                         <div className="flex gap-1">
                           {[...Array(3)].map((_, index) => (<div key={index} className="w-1 h-1 rounded-full bg-white" />))}
@@ -302,7 +302,7 @@ function DocumentCard({ index: s }) {
                 <p className="text-gray-600 text-sm mb-2">
                   Код діятиме ще 2:59 хв
                 </p>
-                {/* Використовуємо реальний QR код на основі даних */}
+                {/* QR код */}
                 <QRCode value={qrData} size={160} />
                 
                 <p className="text-xs text-gray-500 mt-2">
@@ -315,6 +315,7 @@ function DocumentCard({ index: s }) {
                     <button className="p-3 bg-black rounded-xl text-white">
                       <div className="w-6 h-6 flex items-center justify-center">
                         <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                          {/* Іконка QR-коду */}
                           <path
                             d="M3 9h6m-6 6h6m6-6h6m-6 6h6M3 3h6v6H3V3zm12 0h6v6h-6V3zM3 15h6v6H3v-6zm12 0h6v6h-6v-6z"
                             stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
@@ -328,6 +329,7 @@ function DocumentCard({ index: s }) {
                     <button className="p-3 bg-black rounded-xl text-white">
                       <div className="w-6 h-6 flex items-center justify-center">
                         <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                          {/* Іконка Штрих-коду */}
                           <path
                             d="M4 5h16M4 9h16M4 13h16M4 19h16"
                             stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
@@ -363,14 +365,14 @@ function DocumentSlider() {
   const handlers = useSwipeable({
     onSwipedLeft: () => {
       if (currentIndex < documents.length - 1) {
-        setDirection(1); // i(1)
-        setCurrentIndex(prev => prev + 1); // s(e=>e+1)
+        setDirection(1); 
+        setCurrentIndex(prev => prev + 1); 
       }
     },
     onSwipedRight: () => {
       if (currentIndex > 0) {
-        setDirection(-1); // i(-1)
-        setCurrentIndex(prev => prev - 1); // s(e=>e-1)
+        setDirection(-1); 
+        setCurrentIndex(prev => prev - 1); 
       }
     },
     preventDefaultTouchmoveEvent: true,
@@ -395,7 +397,6 @@ function DocumentSlider() {
   };
 
   return (
-    // !!! КЛАСИ З МІНІМІЗОВАНОГО ФАЙЛУ ДЛЯ u
     <div className="flex flex-col items-center"> 
       <div className="relative w-full h-[70vh] overflow-hidden" {...handlers}>
         {/* m.M - AnimatePresence з framer-motion */}
@@ -437,8 +438,6 @@ function DocumentSlider() {
 // ----------------------------------------------------------------------
 
 export default function DocumentsPage() {
-    // Вхідна точка, яка має містити DocumentSlider
-    // Додаємо стилі для фону та відступи, як у попередніх версіях сторінки документів.
   return (
     <main
       className="min-h-screen flex flex-col items-center bg-gradient-to-b 
@@ -450,23 +449,15 @@ export default function DocumentsPage() {
         </div>
 
 
-      {/* Bottom nav */}
+      {/* Bottom nav - Відновлено з використанням вбудованих SVG */}
       <nav className="fixed bottom-0 left-0 right-0 z-10 bg-black text-white h-[80px] pb-4 flex justify-around items-center text-[10px]">
         <Link
           href="/home"
           className="flex flex-col items-center gap-1 opacity-60"
         >
+          {/* Іконка Стрічка (AlignLeft) */}
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-align-left"
+            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           >
             <path d="M15 12H3"></path>
             <path d="M17 18H3"></path>
@@ -476,17 +467,9 @@ export default function DocumentsPage() {
         </Link>
 
         <Link href="/documents" className="flex flex-col items-center gap-1">
+          {/* Іконка Документи (FileText) */}
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-file-text"
+            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           >
             <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
             <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -501,17 +484,9 @@ export default function DocumentsPage() {
           href="/services"
           className="flex flex-col items-center gap-1 opacity-60"
         >
+          {/* Іконка Сервіси (Zap) */}
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-zap"
+            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           >
             <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
           </svg>
@@ -522,17 +497,9 @@ export default function DocumentsPage() {
           href="/menu"
           className="flex flex-col items-center gap-1 opacity-60"
         >
+          {/* Іконка Меню (User) */}
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-user"
+            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           >
             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
@@ -543,3 +510,23 @@ export default function DocumentsPage() {
     </main>
   );
 }
+
+// Додаємо CSS для стилів, які не існують у чистому Tailwind
+const style = document.createElement('style');
+style.textContent = `
+    .perspective {
+        perspective: 1000px;
+    }
+    .backface-hidden {
+        backface-visibility: hidden;
+    }
+    @keyframes scroll {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+`;
+document.head.appendChild(style);

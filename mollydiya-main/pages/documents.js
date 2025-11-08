@@ -434,26 +434,30 @@ function DocumentSlider() {
 
 
 // ----------------------------------------------------------------------
-// 3. ГОЛОВНА СТОРІНКА (DocumentsPage)
+// 3. ГОЛОВНА СТОРІНКА (DocumentsPage) - ВИПРАВЛЕНО
 // ----------------------------------------------------------------------
 
 export default function DocumentsPage() {
   return (
-    <main
-      className="min-h-screen flex flex-col items-center bg-gradient-to-b
-      from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden"
-    >
+    <Fragment> {/* Або просто <> */}
+      <main
+        className="min-h-screen flex flex-col items-center bg-gradient-to-b
+        from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden"
+      >
         {/* Додаємо відступ зверху для позиціонування картки */}
         <div className="mt-20 w-[90%] max-w-sm mx-auto">
-             <DocumentSlider />
+          <DocumentSlider />
         </div>
-    </main>
-  );
-}
+        {/*
+          Увесь контент сторінки має бути тут.
+          Bottom nav тепер буде після вмісту сторінки, але всередині <Fragment>.
+        */}
+      </main>
 
-
-      {/* Bottom nav - Відновлено з використанням вбудованих SVG */}
+      {/* Bottom nav - ТЕПЕР ВНУТРІШНЯ ЧАСТИНА RETURN */}
       <nav className="fixed bottom-0 left-0 right-0 z-10 bg-black text-white h-[80px] pb-4 flex justify-around items-center text-[10px]">
+        {/* ... увесь код Link та SVG (Стрічка, Документи, Сервіси, Меню) ... */}
+
         <Link
           href="/home"
           className="flex flex-col items-center gap-1 opacity-60"
@@ -491,7 +495,7 @@ export default function DocumentsPage() {
           <svg
             xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           >
-            <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+            <path d="M4 14a1 1 0 0 1-.78-1.63l9.9 10.2a.5.5 0 0 1 .86-.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
           </svg>
           <span>Сервіси</span>
         </Link>
@@ -510,10 +514,9 @@ export default function DocumentsPage() {
           <span>Меню</span>
         </Link>
       </nav>
-    </main>
+    </Fragment> // Або </>
   );
 }
-
 // Додаємо CSS для стилів, які не існують у чистому Tailwind
 const style = document.createElement('style');
 style.textContent = `

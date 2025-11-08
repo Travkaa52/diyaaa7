@@ -449,7 +449,7 @@ export default function DocumentsPage() {
         </div>
     </main>
   );
-}>
+}
 
 
       {/* Bottom nav - Відновлено з використанням вбудованих SVG */}

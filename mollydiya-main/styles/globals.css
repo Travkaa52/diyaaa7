@@ -47,31 +47,14 @@
 /* ----------------------------------------------------------- */
 @font-face {
   font-family: e-Ukraine;
-  src: url(../fonts/e-Ukraine-UltraLight.c127e4aa.ttf);
+  src: url(../fonts/e-Ukraine-Regular.woff);
   font-weight: 200;
 }
 @font-face {
   font-family: e-Ukraine;
-  src: url(../fonts/e-Ukraine-Light.e15911d8.otf);
+  src: url(../fonts/e-UkraineHead-Medium.woff);
   font-weight: 300;
 }
-@font-face {
-  font-family: e-Ukraine;
-  src: url(../fonts/e-Ukraine-Regular.945426f5.otf);
-  font-weight: 400;
-}
-@font-face {
-  font-family: e-Ukraine;
-  src: url(../fonts/e-Ukraine-Medium.e265d080.ttf);
-  font-weight: 600;
-}
-@font-face {
-  font-family: e-Ukraine;
-  src: url(../fonts/e-Ukraine-Bold.de553052.ttf);
-  font-weight: 700;
-}
-
-
 /* ----------------------------------------------------------- */
 /* 3. КЛЮЧЕВЫЕ КАДРЫ ДЛЯ АНИМАЦИИ (Бегущая Строка Документа) */
 /* ----------------------------------------------------------- */

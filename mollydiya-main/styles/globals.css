@@ -47,12 +47,12 @@
 /* ----------------------------------------------------------- */
 @font-face {
   font-family: e-Ukraine;
-  src: url(../fonts/e-Ukraine-Regular.woff);
+  src: url(/fonts/e-Ukraine-Regular.woff);
   font-weight: 200;
 }
 @font-face {
   font-family: e-Ukraine;
-  src: url(../fonts/e-UkraineHead-Medium.woff);
+  src: url(/fonts/e-UkraineHead-Medium.woff);
   font-weight: 300;
 }
 /* ----------------------------------------------------------- */

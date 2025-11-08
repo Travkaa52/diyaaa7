@@ -440,13 +440,16 @@ function DocumentSlider() {
 export default function DocumentsPage() {
   return (
     <main
-      className="min-h-screen flex flex-col items-center bg-gradient-to-b 
+      className="min-h-screen flex flex-col items-center bg-gradient-to-b
       from-[#d7c7ff] via-[#f0eaff] to-[#fff8d7] overflow-hidden"
     >
         {/* Додаємо відступ зверху для позиціонування картки */}
         <div className="mt-20 w-[90%] max-w-sm mx-auto">
              <DocumentSlider />
         </div>
+    </main>
+  );
+}>
 
 
       {/* Bottom nav - Відновлено з використанням вбудованих SVG */}

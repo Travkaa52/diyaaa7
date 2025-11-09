@@ -1,0 +1,54 @@
+.navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 5px;
+    padding-bottom: 20px;
+    height: 100px;
+    z-index: 100;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.nav-btn img {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+.nav-btn span {
+    font-size: 11px;
+    color: #fff;
+    font-family: 'e-UkraineHead-Regular';
+}
+
+
+.home img {
+    width: 40px; /* Ширина по умолчанию меньше */
+}
+
+.nav-btn.active.home img {
+    width: 30px; /* Увеличенная ширина для активной кнопки */
+}
+
+.documents img{
+    width: 35px;
+}
+
+.nav-btn.active.documents img {
+    width: 28px; /* Увеличенная ширина для активной кнопки */
+    height: 33px;
+}

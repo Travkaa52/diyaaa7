@@ -1,0 +1,282 @@
+.bg {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.authTitle {
+  font-family: 'e-UkraineHead-Regular', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: #000;
+  margin: 120px 0 ;
+}
+
+.authWrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.authDotsWrap {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.authDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+      transform: translateX(0);
+  }
+  25% {
+      transform: translateX(-10px);
+  }
+  50% {
+      transform: translateX(5px);
+  }
+  75% {
+      transform: translateX(-10px);
+  }
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px 25px;
+  justify-items: center;
+}
+
+.keypadBtn {
+  background-color: #fff;
+  padding: 10px;
+  color: #000;
+  font-family: 'e-UkraineHead-Regular', sans-serif;
+  font-size: 26px;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.keypadBtn:active {
+  background-color: #000;
+  color: #fff;
+}
+
+.keypadBtn.delete {
+  background: none;
+  width: 60px;
+  height: 80px;
+  box-shadow: none;
+}
+
+.keypadBtn.biometric {
+  background: none;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.keypadBtn.biometric img {
+  max-width: 75%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.Footer {
+  display: flex;
+  margin-bottom: 40px;
+}
+
+.Footer h2 {
+  font-family: 'e-UkraineHead-Regular';
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.center-container {
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.user-id-container { 
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-id-container  h1 {
+  font-size: 18px;
+  font-family: 'e-UkraineHead-Regular';
+  font-weight: light;
+}
+
+.user-id-container > input {
+  padding: 10px;
+  border: none;
+  border-radius: 15px;
+  outline: none;
+  font-family: 'e-UkraineHead-Regular';
+  font-weight: normal;
+}
+
+.user-id-container > button {
+  color: #fff;
+  border: 0;
+  border-radius: 15px;
+  padding: 10px;
+  background: #000;
+  font-family: 'e-UkraineHead-Regular';
+  font-weight: normal;
+}
+
+.copy-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateX(-50%);
+  background-color: #c02d2d;
+  font-family: 'e-UkraineHead-Regular';
+  font-weight: normal;
+  font-size: 12px;
+  color: #000;
+  padding: 20px 0;
+  padding-top: 50px;
+  text-align: center;
+  width: 100%;
+  opacity: 0;
+  animation: fadeInOut 2.5s ease-in-out;
+  z-index: 1000;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  10% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  90% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  100% {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+}
+
+/* userAuth.module.css */
+
+.signature-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  margin: 20px;
+}
+
+.signature {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.signature-pad {
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.signature-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.signature-buttons button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #000;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'e-UkraineHead-Regular';
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.signature-buttons button:hover {
+  background-color: #0056b3;
+}
+
+.signature-buttons button:nth-child(2) {
+  background-color: #dc3545;
+}
+
+.signature-buttons button:nth-child(2):hover {
+  background-color: #a71d2a;
+}
+
+.signature-container h1 {
+  font-family: 'e-UkraineHead-Regular';
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.load-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'e-UkraineHead-Regular';
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.load-page button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #000;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'e-UkraineHead-Regular';
+  font-size: 12px;
+  font-weight: normal;
+}

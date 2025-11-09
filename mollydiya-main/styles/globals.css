@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------------------------- */
+/* 1. БАЗОВЫЙ СЛОЙ (OVERRIDE) */
+/* Включает стили body/html и #app для фиксированного мобильного макета */
+/* ----------------------------------------------------------- */
+@layer base {
+  /* Переменные для Safe Area (iOS) */
+  :root {
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  }
+
+  body, html {
+    /* Сброс стандартных полей */
+    padding: 0;
+    margin: 0;
+    /* Ключевые стили для фиксированного мобильного макета */
+    height: 100vh;
+    width: 100vw;
+    overscroll-behavior: none;
+    position: fixed; /* Предотвращает прокрутку всего окна */
+  }
+
+  body {
+    height: 100%;
+    /* Базовый фон из app.d1b46fef.css */
+    background-color: #e2ecf5;
+  }
+
+  /* Стиль для корневого контейнера (Next.js использует #__next или #app) */
+  #__next, #app { 
+    /* Шрифт, определенный ниже */
+    font-family: e-Ukraine, Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    height: 100%;
+    letter-spacing: .02em; /* Из app.d1b46fef.css */
+  }
+}
+
+/* ----------------------------------------------------------- */
+/* 2. ОПРЕДЕЛЕНИЕ ШРИФТОВ e-Ukraine (Из app.d1b46fef.css) */
+/* ----------------------------------------------------------- */
+@font-face {
+  font-family: e-Ukraine;
+  src: url(/fonts/e-Ukraine-Regular.woff);
+  font-weight: 200;
+}
+@font-face {
+  font-family: e-Ukraine;
+  src: url(/fonts/e-UkraineHead-Medium.woff);
+  font-weight: 300;
+}
+/* ----------------------------------------------------------- */
+/* 3. КЛЮЧЕВЫЕ КАДРЫ ДЛЯ АНИМАЦИИ (Бегущая Строка Документа) */
+/* ----------------------------------------------------------- */
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } 
+}
+
+.animate-scroll {
+    animation: scroll 15s linear infinite;
+    width: 200%; /* Обеспечивает видимую прокрутку */
+}
